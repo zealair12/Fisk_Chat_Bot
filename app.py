@@ -2,17 +2,17 @@ from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
-api_key = "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"  # Replace with your actual API token
+api_key = "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"  
 
 def get_completion(prompt):
     url = "https://api.perplexity.ai/chat/completions"
     payload = {
         "model": "llama-3.1-sonar-small-128k-online",
         "messages": [
-            {"role": "system", "content": "Be precise and concise."},
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": "Respond to greeting simply and precisely."},
+            {"role": "user", "content": prompt},
         ],
-        "max_tokens": "Optional",  # Replace "Optional" with an actual number if needed
+        "max_tokens": "84",  
         "temperature": 0.2,
         "top_p": 0.9,
         "return_citations": True,
@@ -36,7 +36,7 @@ def get_completion(prompt):
         response_json = response.json()
         return response_json['choices'][0]['message']['content']
     else:
-        return "Error: Unable to connect to the API."
+        return "Error: API loading failed."
 
 @app.route("/")
 def home():    
@@ -49,4 +49,4 @@ def get_bot_response():
     return response
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
