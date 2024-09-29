@@ -1,0 +1,122 @@
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AnswerFisk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        /* Set height of body and the document to 100% */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Urbanist', sans-serif;
+        }
+        /* Apply a gradient background */
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #chatbox {
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+            margin-top: 60px;
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+        }
+        #userInput {
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+            margin-top: 20px;
+        }
+        #textInput {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid white;
+            background: none;
+            color: white;
+            font-size: 17px;
+            outline: none;
+        }
+        .userText, .botText {
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+        .userText span, .botText span {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 24px;
+        }
+        .userText {
+            text-align: right;
+        }
+        .userText span {
+            background-color: #808080;
+            color: white;
+        }
+        .botText {
+            text-align: left;
+        }
+        .botText span {
+            background-color: #4169e1;
+            color: white;
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-top: 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>AnswerFisk</h1>
+    <div id="chatbox">
+        <p class="botText">
+            <span>Hi! I'm AnswerFisk, ready to answer questions regarding Fisk.</span>
+        </p>
+    </div>
+    <div id="userInput">
+        <input id="textInput" type="text" name="msg" placeholder="Type your message here..." />
+    </div>
+
+    <script>
+        function getBotResponse() {
+            var rawText = $("#textInput").val();
+            var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+            $("#textInput").val("");
+            $("#chatbox").append(userHtml);
+            document
+                .getElementById("userInput")
+                .scrollIntoView({ block: "start", behavior: "smooth" });
+            $.get("/get", { msg: rawText }).done(function (data) {
+                var botHtml = '<p class="botText"><span>' + data + "</span></p>";
+                $("#chatbox").append(botHtml);
+                document
+                    .getElementById("userInput")
+                    .scrollIntoView({ block: "start", behavior: "smooth" });
+            });
+        }
+        $("#textInput").keypress(function (e) {
+            if (e.which == 13) {
+                getBotResponse();
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}
